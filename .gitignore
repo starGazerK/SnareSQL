@@ -1,0 +1,22 @@
+# 缓存文件
+__pycache__/
+*.pyc
+*.pyo
+
+# 数据库
+db.sqlite3
+
+# 日志与系统生成文件
+static/log/*
+!static/log/.gitkeep
+static/uploads/*
+!static/uploads/.gitkeep
+
+# IDE或系统配置
+.idea/
+.vscode/
+.DS_Store
+.codegraph/
+.vscode/
+__pycache__/
+

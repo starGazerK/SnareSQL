@@ -1,0 +1,120 @@
+<link href="/static/btst/css/bootstrap-table.min.css" rel="stylesheet"> 
+ 
+<div class="card-header d-flex align-items-center">
+    <div id="toolbar">
+		<!--label> </label>
+		<input type="date"    value="{{mb}}" id="mon"/>
+		<button class="btn btn-default" onclick="refreshdat()">统计</button -->
+	</div>
+</div>
+			
+<div class="card-body"> 
+	<div class="list-table">                
+		<div id="test_piechart" style="height: 400px;"></div>
+	</div>		 
+</div>
+ 
+<script src="/static/js/echarts.min.js"></script>
+ 
+<script type="text/javascript">
+	var option;
+	var myChart2;
+	(function($){	 		 
+		//////////////////////////////////////
+		myChart2 = echarts.init(document.getElementById('test_piechart'));
+		// 指定图表的配置项和数据
+		option = {
+			title : {
+				text: '{{tjmh}}构成图',				
+				x:'center'
+			},
+			tooltip : {
+				trigger: 'item',
+				formatter: "{a} <br/>{b} : {c} ({d}%)"
+			},
+			legend: {
+				orient : 'vertical',
+				x : 'left',
+				data:[
+					{% for x in dat %}
+                        '{{x.1}}',
+                        {% endfor %}
+				]
+			},
+			toolbox: {
+				show : true,
+				feature : {
+					mark : {show: true},
+					dataView : {show: true, readOnly: false},
+					magicType : {
+						show: true,
+						type: ['pie', 'funnel'],
+						option: {
+							funnel: {
+								x: '25%',
+								width: '50%',
+								funnelAlign: 'left',
+								max: 1548
+							}
+						}
+					},
+					restore : {show: true},
+					saveAsImage : {show: true}
+				}
+			},
+			calculable : true,
+			series : [
+				{
+					name:'攻击情况',
+					type:'pie',
+					radius : '55%',
+					center: ['50%', '60%'],
+					data:[					 
+						{%for x in dat%}
+						{value:{{x.0}},name: "{{x.1}}" },						
+						{%endfor%}
+					]
+				}
+			]
+		};
+
+
+		// 使用刚指定的配置项和数据显示图表。
+		myChart2.setOption(option);
+
+	})(jQuery);
+
+	function refreshdat(){
+		var m=$('#mon').val()
+		url="/tongji/admin/pielist/?do=newd&tjmh="+m
+		$.ajax({
+			type: 'GET',
+			url: url,			
+			cache: false,
+			success: function (data) {				
+				if (data.statusCode == 200){					
+					console.log(option.series.data)
+					myChart2.setOption({
+						title : {
+							text: data.mon+'月计划完成构成图',				
+							x:'center'
+						},
+						series : [{
+							name:'计划/实际完成情况',
+							type:'pie',
+							radius : '55%',
+							center: ['50%', '60%'],
+							data:data.dat
+						}
+						] 
+					})
+					console.log(option.series)
+				}
+				else
+					showalert(data.message, 1);
+				},
+				error: function (data) { showalert(data.message, 1); }
+			});
+			 
+	}
+</script>

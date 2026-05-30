@@ -1,0 +1,41 @@
+<aside id="sidebar" class="sidebar">
+
+    <div class="head_pic" >
+        <div class="member_header">
+            <img src="/static/btst/img/avatar-2.jpg" alt="">
+            <i class="bi bi-person"></i>
+        </div>
+        <div class="member_name">{{session['username']}}</div>
+    </div>
+        <ul class="sidebar-nav" id="sidebar-nav" >
+
+        <li class="nav-item">
+            <a class="nav-link" href="/">
+                <i class="bi bi-grid"></i>
+                <span>首页</span>
+            </a>
+        </li><!-- End Dashboard Nav -->
+
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="/user/list/">
+                <i class="bi bi-file-earmark-richtext"></i><span>合同数据管理</span>
+            </a>
+        </li><!-- End Forms Nav -->
+
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="/get_all_contract/">
+                <i class="bi bi-table"></i><span>合同下载管理</span>
+            </a>
+        </li><!-- End Forms Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="/get_eventlist/">
+                <i class="bi bi-gear"></i><span>工件事件查看</span>
+            </a>
+        </li><!-- End Forms Nav -->
+
+
+    </ul>
+</aside>

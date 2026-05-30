@@ -1,0 +1,110 @@
+<!-- JavaScript files-->
+<script src=" /static/btst/vendor/jquery/juquery.v431.js"></script>
+<script src="/static/btst/vendor/jquery.cookie/jquery.cookie.js"> </script>
+<script src="/static/btst/vendor/chart.js/Chart.min.js"></script>
+<!-- Main File-->
+<script src="/static/btst/js/front.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="/static/btst/js/bootstrap.min.js"></script>
+<script src="/static/btst/js/bootstrap-table.min.js"></script>
+<script src="/static/btst/js/bootstrap-table-zh-CN.min.js"></script>
+
+<!-- ======= Footer ======= -->
+<footer id="footer" class="footer">
+    <div class="copyright">
+        &copy; Copyright <strong><span>蜜罐管理系统</span></strong>. All Rights Reserved
+    </div>
+</footer><!-- End Footer -->
+
+
+
+
+<script>
+  function showalert(msg, error = 0) {
+    if ( parseInt(error) == 1){
+      em = '.alert-danger';
+      emx= 'alert-danger';
+      }
+    else
+      {em = '.alert-success';
+      emx = 'alert-success';}
+    var nn=$(em)
+    if( nn.length<=0 )
+    {
+      var txt='<div class="alert d-none '+emx+'"> </div>'
+      $('#left_main').prepend(txt)
+    }
+    $(em).text(msg);
+    $(em).removeClass('d-none');
+	$(em).css("z-index", 9999);
+    setTimeout(() => {
+      $('.alert').addClass("d-none");
+    }, 3000);
+  }
+
+
+
+  $('.loadurl').click(function (e) {
+    e.preventDefault(); // 阻止a的跳转
+    url = $(this).attr('href')
+    contain = $(this).attr('rel')
+    if (contain) {
+      contain = '#' + contain;
+      $.ajax({
+        url: url,
+        dataType: 'html',
+        type: 'get',
+        async: true,
+        success: function (data) {
+          $(contain).html(data)
+        },
+        error: function () {
+        }
+      })
+    }
+  });
+
+  function ajaxTodo(url, callback) {
+    var $callback = callback;
+    if (!$.isFunction($callback)) $callback = eval('(' + callback + ')');
+    $.ajax({
+      type: 'POST',
+      url: url,
+      dataType: "json",
+      cache: false,
+      success: function (data) {
+
+        if (data.statusCode == 200)
+          showalert(data.message);
+        else
+          showalert(data.message, 1);
+        $callback;
+      },
+      error: function (data) { showalert(data.message, 1); }
+    });
+  }
+
+  $('.ajaxtodo').click(function (event) {
+    $this = $(this)
+    event.preventDefault();
+    if ($this.hasClass('disabled') || $this.hasClass('buttonDisabled')) {
+      return false;
+    }
+    var url = ($this.attr("href"));
+    var title = $this.attr("title");
+    if (title) {
+      if (confirm(title) == false)
+        return false;
+    };
+    //ajaxTodo(url, $this.attr("callback"));
+    return false;
+
+  });
+
+
+
+
+  //////////////
+
+
+</script>

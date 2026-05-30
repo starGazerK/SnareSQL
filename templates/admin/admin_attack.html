@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>管理中心-星海金融集团</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="/static/member/assets/img/favicon.png" rel="icon">
+    <link href="/static/member/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Vendor CSS Files -->
+    <link href="/static/member/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/member/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/static/member/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="/static/member/assets/vendor/quill/quill.snow.css" rel="stylesheet">
+    <link href="/static/member/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+    <link href="/static/member/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="/static/member/assets/vendor/simple-datatables/style.css" rel="stylesheet">
+    <link href="/static/layui-v2.8.15/css/layui.css" rel="stylesheet">
+    <!-- Template Main CSS File -->
+    <script>document.write('<link href="/static/member/assets/css/style.css?' + Math.round(Math.random() * 10000) + '" rel="stylesheet" type="text/css">');</script>
+</head>
+
+<body>
+<!-- ======= Header ======= -->
+{% include "head_old.html" %}
+<!-- End Header -->
+
+<!-- ======= 左侧菜单 ======= -->
+{% include "left_guanliyuan.html" %}
+<!-- End 左侧菜单-->
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>攻击数据统计</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/8ad9min0124">主页</a></li>
+                <li class="breadcrumb-item"><a href="">攻击数据统计</a></li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+    <section class="section">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <!-- Candle Stick Chart -->
+                        <div class="row">
+                            <div id="container" style=" width:100%;height: 450px"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="container_b" style=" width:100%;height: 450px"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+</main><!-- End #main -->
+<!-- Vendor JS Files -->
+<script src="/static/member/assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="/static/member/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/static/member/assets/vendor/chart.js/chart.umd.js"></script>
+<script src="/static/member/assets/vendor/echarts/echarts.min.js"></script>
+<script src="/static/member/assets/vendor/quill/quill.min.js"></script>
+<script src="/static/member/assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/static/member/assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="/static/member/assets/vendor/php-email-form/validate.js"></script>
+
+<!-- Template Main JS File -->
+<script src="/static/member/assets/js/main.js"></script>
+
+<script src="/static/btst/vendor/jquery/juquery.v431.js"></script>
+<script src="/static/layui-v2.8.15/layui.js"></script>
+
+
+
+
+<script type="text/javascript" src="https://registry.npmmirror.com/echarts/5.5.0/files/dist/echarts.min.js"></script>
+
+<script type="text/javascript">
+    var dom = document.getElementById('container');
+    var myChart = echarts.init(dom, null, {
+        renderer: 'canvas',
+        useDirtyRect: false
+    });
+    var app = {};
+
+    var option;
+
+    option = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        grid: {
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: [
+            {
+                type: 'category',
+                data: ['HPT', 'SQL'],
+                axisTick: {
+                    alignWithLabel: true
+                }
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value'
+            }
+        ],
+        series: [
+            {
+                name: 'Direct',
+                type: 'bar',
+                barWidth: '90%',
+                data: [
+                    {% for x in linebar_data %}
+                        '{{x.0}}',
+                    {% endfor %}
+                ]
+            }
+        ]
+    };
+
+    if (option && typeof option === 'object') {
+        myChart.setOption(option);
+    }
+
+    window.addEventListener('resize', myChart.resize);
+</script>
+
+<script type="text/javascript">
+    var dom = document.getElementById('container_b');
+    var bar_data = {{ bar_data|tojson }};  // 将数据转为 JSON 格式
+
+    var myChart = echarts.init(dom, null, {
+        renderer: 'canvas',
+        useDirtyRect: false
+    });
+    var app = {};
+
+    var option = {
+        title: {
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item'
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left'
+        },
+        series: [
+            {
+                name: '攻击数',
+                type: 'pie',
+                radius: '50%',
+                data: bar_data,  // 应用 bar_data 到图表数据中
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+    if (option && typeof option === 'object') {
+        myChart.setOption(option);
+    }
+
+    window.addEventListener('resize', myChart.resize);
+</script>
+
+
+</body>
+
+</html>

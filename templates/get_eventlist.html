@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>管理中心-星海金融集团</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="/static/member/assets/img/favicon.png" rel="icon">
+    <link href="/static/member/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Vendor CSS Files -->
+    <link href="/static/member/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/member/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/static/layui-v2.8.15/css/layui.css" rel="stylesheet">
+    <!-- Template Main CSS File -->
+    <script>document.write('<link href="/static/member/assets/css/style.css?' + Math.round(Math.random() * 10000) + '" rel="stylesheet" type="text/css">');</script>
+
+
+</head>
+
+<body>
+<!-- ======= Header ======= -->
+{% include "head.html" %}
+<!-- End Header -->
+
+<!-- ======= 左侧菜单 ======= -->
+{% include "left_user.html" %}
+<!-- End 左侧菜单-->
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>工件事件查看</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/index/">主页</a></li>
+                <li class="breadcrumb-item"><a href="">工件事件查看</a></li>
+                <li class="breadcrumb-item active"><a href="/user_list/">列表</a></li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+    <section class="section">
+        <div class="row">
+            <div class="col-lg">
+                <div class="card">
+                    <div class="card-body">
+                        <!-- Candle Stick Chart -->
+                        <div class="row">
+                            <div class="row-cols-1">
+                                <div class="col" id="scroll">
+                                    <div style="padding: 25px 10px 0 10px;">
+                                        <div class="layui-col-md3">
+                                            <h3 class="card-title" style="padding: 3px;">
+                                               工件事件数据列表</h3>
+                                        </div>
+                                        <table class="layui-hide" id="test" lay-filter="test"></table>
+                                        <script type="text/html" id="toolbar">
+                                            <form class="layui-form layui-row layui-col-space5">
+                                                <div class="layui-col-md2">
+                                                    <input type="text" name="name" value=""
+                                                           placeholder="搜索工作事件"
+                                                           class="layui-input" lay-affix="clear">
+                                                </div>
+                                                <div class="layui-col-md8 ">
+                                                    <div class="layui-col-md1 ">
+                                                        <button class="layui-btn" lay-submit
+                                                                lay-filter="demo-table-search">搜索
+                                                        </button>
+                                                    </div>
+                                                    <div class="layui-col-md1">
+                                                        <a class="layui-btn" lay-on="page"
+                                                           id="add_user">
+                                                            <i class="fa fa-plus" aria-hidden="true"> 添加</i>
+                                                        </a>
+                                                    </div>
+
+                                                    <div class="layui-col-md1">
+                                                        <button id="refreshButton" class="layui-btn"><i class="layui-icon layui-icon-refresh-3"></i> 刷新</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </script>
+                                        <script type="text/html" id="barDemo">
+                                            <div class="layui-clear-space">
+                                                <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
+                                                <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                                            </div>
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main><!-- End #main -->
+
+<!-- Vendor JS Files -->
+<script src="/static/member/assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="/static/member/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/static/member/assets/vendor/chart.js/chart.umd.js"></script>
+<script src="/static/member/assets/vendor/echarts/echarts.min.js"></script>
+<script src="/static/member/assets/vendor/quill/quill.min.js"></script>
+<script src="/static/member/assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/static/member/assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="/static/member/assets/vendor/php-email-form/validate.js"></script>
+
+<!-- Template Main JS File -->
+<script src="/static/member/assets/js/main.js"></script>
+<script src="/static/btst/vendor/jquery/juquery.v431.js"></script>
+<script src="/static/layui-v2.8.15/layui.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#userlist_a').attr("class", "nav-link").attr("aria-expanded", "true")
+        $('#userlist_li_a').attr("class", "active")
+        $('#user-nav').attr("class", "nav-content collapse show")
+    });
+    layui.use(['table'], function () {
+        let table = layui.table;
+        let form = layui.form;
+        let dropdown = layui.dropdown;
+        // 创建渲染实例
+        table.render({
+            elem: '#test',
+            url: '/get_eventlist/?do=getdata', // 此处为静态模拟数据，实际使用时需换成真实接口
+            page: true,
+            even:true,  // 偶数行颜色
+            toolbar: '#toolbar',
+            defaultToolbar: ['filter', 'exports', 'print', { // 默认工具
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            cols: [[
+                {field: 'id', title: '事件序', width: 80, align: 'center'},
+                {field: 'name', title: '事件名称', width: 160, align: 'center'},
+                {field: 'start', title: '开始时间', width: 140, align: 'center'},
+                {field: 'end_time', title: '结束时间', width: 140, align: 'center'},
+                {field: 'progress', title: '进度', width: 80, align: 'center'},
+                {field: 'step', title: '流程', width: 160, align: 'center'},
+                {field: 'note', title: '备注', width: 160, align: 'center'},
+                {width: 160, fixed: 'right', title: '操作', templet: '#barDemo',align: "center"}
+            ]]
+        });
+
+        // 触发单元格工具事件
+        table.on('tool(test)', function (obj) { // 双击 toolDouble
+            let data = obj.data; // 获得当前行数据
+            let title_status = '封禁用户'
+            let keyword = '封禁'
+            let status = 1
+            if (data.status === 0) {
+                title_status = '解封用户'
+                keyword = '解封'
+                status = 0
+            }
+            if (obj.event === 'edit') {
+                layer.open({
+                    title: '查看工作事件',
+                    type: 2,
+                    shadeClose: true,
+                    maxmin: true,
+                    area: ['40%', '85%'],
+                    content: '/get_eventlist/?do=openmod_e&id=' + data.id
+                });
+            }
+
+            if (obj.event === 'del') {
+                console.log(data.id)
+                layer.confirm('确认要删除吗？' , function (index) {
+                    $.ajax({
+                        url: '/get_eventlist/?do=delrow&id=' + data.id,
+                        type: 'post',
+                        data: 'pid=' + data.id,
+                        success: function (res) {
+                            if (res.statusCode === 200) {
+                                $(obj).parents("tr").remove();
+                                layer.msg(res.message, {icon: 1, time: 1500}, function () {
+                                    location.reload();
+                                });
+                            } else {
+                                layer.msg(res.message, {icon: 5, time: 1000});
+                            }
+
+                        }
+                    });
+                });
+            }
+
+        });
+        // 搜索功能
+        form.on('submit(demo-table-search)', function (data) {
+            let name = data.field; // 获得表单字段
+            table.reload('test', {
+                page: {
+                    curr: 1 // 重新从第 1 页开始
+                },
+                where: name // 搜索的字段
+            });
+            let toastBody = $('#stoast-body');
+            toastBody.html('搜索成功');
+            $('#stoast').toast('show');
+            return false; // 阻止默认 form 跳转
+        });
+        layui.use(function () {
+            let layer = layui.layer;
+            let util = layui.util;
+            // 批量事件
+            util.on('lay-on', {
+                page: function () {
+                    // 页面层
+                    const admin_layer = layer.open({
+                        type: 2,
+                        anim: 5,
+                        maxmin: true,
+                        shadeClose: true,
+                        title: '新增代办事项',
+                        area: ['40%', '93%'], // 宽高
+                        content: '/get_eventlist/?do=openmod_e'
+                    });
+                },
+            });
+        });
+    });
+    //刷新本页
+    document.getElementById('refreshButton').addEventListener('click', function () {
+        location.reload(); // 刷新页面
+    });
+</script>
+
+</body>
+
+</html>

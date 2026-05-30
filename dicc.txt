@@ -1,0 +1,4 @@
+C:/windows/win.ini
+C:/windows/system.ini
+/etc/ntp.conf
+C:/Windows/PFRO.log

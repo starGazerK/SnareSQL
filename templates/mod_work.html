@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>管理中心-星海金融集团</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+    <link href="/static/layui-v2.8.15/css/layui.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<form class="layui-form" action="" rel="{{ act }}" id="ff1">
+
+    <div class="layui-bg-gray" style="padding: 16px;">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md6">
+                <div class="layui-card">
+                    <div class="layui-card-body">
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">事件名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="name" lay-verify="required" placeholder="请输入"
+                                       autocomplete="off" value="{{ dat.name }}" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">开始时间</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="start" lay-verify="required" placeholder="请输入开始时间"
+                                       autocomplete="off" value="{{ dat.start }}" class="layui-input">
+                                <input type="hidden" name="id" value="{{ dat.id }}">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">结束时间</label>
+                            <div class="layui-input-block">
+                                <input type="text" lay-verify="required" placeholder="请输入结束时间"
+                                       autocomplete="off" name="end_time" value="{{ dat.end_time }}" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">进度</label>
+                            <div class="layui-input-block">
+                                <input type="text" lay-verify="required" placeholder="请输入进度"
+                                       autocomplete="off" name="progress" value="{{ dat.progress }}" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">流程</label>
+                            <div class="layui-input-block">
+                                <input type="text" lay-verify="required" placeholder="请输入"
+                                       autocomplete="off" name="step" value="{{ dat.step }}" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">备注</label>
+                            <div class="layui-input-block">
+                                <input type="text" lay-verify="required" placeholder="请输入备注"
+                                       autocomplete="off" name="note" value="{{ dat.note }}" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <button type="button" class="layui-btn  layui-btn-fluid" id="item_submitBtn" class="btn">保存</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</form>
+<script src="/static/btst/vendor/jquery/juquery.v431.js"></script>
+<script src="/static/layui-v2.8.15/layui.js"></script>
+<script>
+    function showalert(msg, error = 0) {
+        if (parseInt(error) === 1) {
+            em = '.alert-danger';
+            emx = 'alert-danger';
+        } else {
+            em = '.alert-success';
+            emx = 'alert-success';
+        }
+        var nn = $(em)
+        if (nn.length <= 0) {
+            var txt = '<div class="alert d-none ' + emx + '"> </div>'
+            $('#left_main').prepend(txt)
+        }
+        $(em).text(msg);
+        $(em).removeClass('d-none');
+        $(em).css("z-index", 9999);
+        setTimeout(() => {
+            $('.alert').addClass("d-none");
+        }, 3000);
+    }
+
+    function checkvalid() {
+        var e = $('.valid')
+        var ret = 0
+        $.each(e, function (i, domEle) {
+            var txt = $(domEle).attr("placeholder");
+            var v = $(domEle).val();
+            v = $.trim(v)
+            if (v === '') {
+                alert(txt);
+                ret = 1
+            }
+        })
+        return ret;
+    }
+
+    //给保存按钮添加提交事件
+
+
+    $("#item_submitBtn").on('click', function () {
+        if (checkvalid() > 0)
+            return
+        var url = $('#ff1').attr('rel')
+        console.log(url)
+        $.ajax({
+            cache: false,
+            type: "POST", //方法类型
+            dataType: "json",  //预期服务器返回的数据类型
+            url: url,
+            data: $("#ff1").serialize(),
+            success: function (data) {
+                if (data.statusCode === 200) {
+                    layer.msg(data.message,{icon:1,time:800}, function(){
+                            location.reload();
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                            parent.location.reload();
+                        });
+                } else{
+                    layer.msg(data.message,{icon:5,time:1500});
+                }
+            },
+            error: function () {
+
+                layer.msg('提交失败',{icon:5,time:1500});
+
+            }
+        });
+    });
+
+
+</script>
+
+</body>
+
+</html>

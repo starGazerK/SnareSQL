@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>系统登录-星海金融集团</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Vendor CSS Files -->
+    <link href="/static/btst/front_vendor/aos/aos.css" rel="stylesheet">
+    <link href="/static/btst/front_vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/btst/front_vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <!-- Template Main CSS File -->
+    <link href="/static/btst/css/style.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="login_main">
+    <div class="row" style="margin: 0;">
+        <div class="col-md-4"></div>
+        <div class="col-md-8">
+            <div class="login_k">
+
+                <form action="/login" id="loginForm" method="post" onsubmit="return submitForm()">
+
+                    <div class="login_title">星海金融集团员工登录</div>
+
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">账号</label>
+                        <input type="text" name="username" id="username" class="form-control" placeholder="请输入登录账号">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">密码</label>
+                        <input type="password" name="password" class="form-control" id="password" placeholder="请输入登录密码">
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary btn-lg btn-block btn-uppercase mb-4">登录</button>
+
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+    $(function () {
+        //do something
+
+    });
+
+    function submitForm() {
+        var frm = $('#loginForm');
+        var form = $(frm);
+        var input;
+        input = form.find('#username');
+        if (input.val() === '') {
+
+            alert('请填写账号');
+            return false;
+        }
+        input = form.find('#password');
+        if (input.val() === '') {
+            alert('请填写密码');
+
+            return false;
+        }
+        input = form.find('#pagerandom');
+        if (input.val() === '') {
+            alert('请填写验证码');
+            return false;
+        }
+        return true;
+    }
+</script>
+
+</body>
+
+</html>
